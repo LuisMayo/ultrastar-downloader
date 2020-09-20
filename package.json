@@ -1,0 +1,31 @@
+{
+  "name": "ultrastar-downloader-server",
+  "version": "1.0.0",
+  "description": "Download a list of songs as ultrastar torrents",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuisMayo/ultrastar-downloader-server.git"
+  },
+  "keywords": [
+    "ultrastar",
+    "torrent"
+  ],
+  "author": "LuisMayo",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/LuisMayo/ultrastar-downloader-server/issues"
+  },
+  "homepage": "https://github.com/LuisMayo/ultrastar-downloader-server#readme",
+  "dependencies": {
+    "nightmare": "^3.0.2",
+    "nightmare-download-manager": "^0.2.5",
+    "typescript": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/nightmare": "^2.10.4"
+  }
+}
