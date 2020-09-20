@@ -22,15 +22,9 @@ async function main() {
         .click('.canciones > li > .acciones > li:nth-child(3) > button')
         .click('.canciones > li:nth-child(2) > .acciones > li:nth-child(3) > button')
         .click('#descargar_paquete')
-        // .wait(10000)
-        // .goto('https://ultrastar-es.org/es/canciones/descargar/paquete')
         ///@ts-ignore
         .waitDownloadsComplete()
-    nightmare.evaluate(() => {
-        const thingy = document.querySelector('.canciones > li > h3 > a');
-        return thingy?.textContent;
-    })
-        .end()
+        nightmare.end()
         .then(console.log)
         .catch((error: any) => {
             console.error('Error:', error)
