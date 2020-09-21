@@ -1,7 +1,7 @@
 import Nightmare from 'nightmare';
-require('nightmare-download-manager')(Nightmare);
-async function main() {
-    let nightmare = new Nightmare({ show: true });
+export async function main() {
+    require('nightmare-download-manager')(Nightmare);
+    let nightmare = new Nightmare({ show: false });
     ///@ts-ignore
     nightmare.on('download', (state, downloadItem) => {
         if (state == 'started') {
@@ -28,5 +28,3 @@ async function main() {
         // .waitDownloadsComplete()
         return nightmare.end();
 }
-
-main().then(() => { });
