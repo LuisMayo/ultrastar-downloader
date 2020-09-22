@@ -6,12 +6,12 @@
  */
 const express = require('express')
 const app = express()
-app.use(cors(), express.json())
+app.use(express.json())
 const port = 8080
 
-app.get('/', (req, res) => {
+app.post('/', (req, res) => {
     const { main } = require('./ultrastar');
-    main().then((val) => {
+    main(req.body).then((val) => {
         res.status(200).send('DONE! ' + val);
     }).catch((e) => {
         res.status(500).send('Fail! ' + e);
