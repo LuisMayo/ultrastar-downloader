@@ -12,7 +12,7 @@ const port = 8080
 app.post('/', (req, res) => {
     const { main } = require('./ultrastar');
     main(req.body).then((val) => {
-        res.status(200).send('DONE! ' + val);
+        res.download(__dirname + '/' + req.body.username + '/songs.zip');
     }).catch((e) => {
         res.status(500).send('Fail! ' + e);
     });
