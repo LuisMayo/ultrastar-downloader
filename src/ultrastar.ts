@@ -4,8 +4,12 @@ import fs from 'fs';
 import archiver from 'archiver';
 
 export async function main(req: Petition) {
+    try {
     //@ts-ignore
     fs.rmdirSync(__dirname + '/' + req.username, { recursive: true });
+    } catch (e) {
+        // Nothing
+    }
     require('nightmare-download-manager')(Nightmare);
     let nightmare = new Nightmare({ show: true });
     ///@ts-ignore
@@ -22,8 +26,9 @@ export async function main(req: Petition) {
         .type('#username', req.username)
         .type('#password', req.password)
         .type('#password', '\u000d')
-        .wait('#username_logged_in')
+        .wait('#username_logged_in') // Login
     for (let song of req.songs) {
+        //Look for the song
         nightmare.goto(`https://ultrastar-es.org/es/canciones?busqueda=${song.artist.replace(' ', '+')}+-+${song.title.replace(' ', '+')}`);
         const sArtist = song.artist;
         const sTitle = song.title;
@@ -73,24 +78,30 @@ export async function main(req: Petition) {
             const song = document.querySelector('#listado > ul > li:nth-child(1) > h3 > a:nth-child(2)')?.textContent || '';
             const similarityArt = compareTwoStrings(sArtist.toLocaleLowerCase(), artist.toLocaleLowerCase());
             const similaritySong = compareTwoStrings(song.toLocaleLowerCase(), sTitle.toLocaleLowerCase());
-            if (similarityArt >= 0.9 && similaritySong >= 0.9) {
-                (document.querySelector('.canciones > li > .acciones > li > a') as HTMLElement).click();
+            if (similarityArt >= 0.85 && similaritySong >= 0.75) { // Is it actually the song we want?
+                (document.querySelector('.canciones > li > .acciones > li > a') as HTMLElement).click(); // Download it
             }
         }, sArtist, sTitle);
     }
     ///@ts-ignore
     nightmare.waitDownloadsComplete()
     await nightmare.end();
-    const output = fs.createWriteStream(__dirname + '/' + req.username + '/songs.zip');
-    const archive = archiver('zip', {
-        zlib: { level: 9 } // Sets the compression level.
+    return new Promise((resolve, reject) => {
+        // Zip all the songs we need
+        const output = fs.createWriteStream(__dirname + '/' + req.username + '/songs.zip');
+        output.on('close', () => {
+            resolve();
+        });
+        const archive = archiver('zip', {
+            zlib: { level: 9 } // Sets the compression level.
+        });
+        archive.pipe(output);
+        archive.directory(__dirname + '/' + req.username + '/songs', false);
+        // Delete the directory after a prudential time
+        setTimeout(() => {
+            //@ts-ignore
+            fs.rmdir(__dirname + '/' + req.username, { recursive: true }, () => { });
+        },  2 * 60 * 60 * 1000);
+        archive.finalize();
     });
-    archive.pipe(output);
-    archive.directory(__dirname + '/' + req.username + '/songs', false);
-    setTimeout(() => {
-        //@ts-ignore
-        fs.rmdir(__dirname + '/' + req.username, { recursive: true }, () => { });
-    },  2 * 60 * 60 * 1000);
-    archive.finalize();
-    return null;
 }
