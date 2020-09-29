@@ -5,8 +5,10 @@
  * @param {!express:Response} res HTTP response context.
  */
 const express = require('express')
+const cors = require('cors')
 const app = express()
-app.use(express.json())
+
+app.use(express.json(), cors())
 const port = process.env.PORT || 8080
 
 app.post('/', (req, res) => {
