@@ -1,17 +1,11 @@
 import Nightmare from 'nightmare';
 import { Petition } from './petition';
-import fs from 'fs';
-import archiver from 'archiver';
 
 export async function main(req: Petition) {
-    try {
-    //@ts-ignore
-    fs.rmdirSync(__dirname + '/' + req.username, { recursive: true });
-    } catch (e) {
-        // Nothing
-    }
     require('nightmare-download-manager')(Nightmare);
-    let nightmare = new Nightmare({ show: true });
+    const rejectedList: string[] = [];
+	///@ts-ignore
+    let nightmare = new Nightmare({ show: true, height: 800 });
     ///@ts-ignore
     nightmare.on('download', (state, downloadItem) => {
         if (state == 'started') {
@@ -85,23 +79,5 @@ export async function main(req: Petition) {
     }
     ///@ts-ignore
     nightmare.waitDownloadsComplete()
-    await nightmare.end();
-    return new Promise((resolve, reject) => {
-        // Zip all the songs we need
-        const output = fs.createWriteStream(__dirname + '/' + req.username + '/songs.zip');
-        output.on('close', () => {
-            resolve();
-        });
-        const archive = archiver('zip', {
-            zlib: { level: 9 } // Sets the compression level.
-        });
-        archive.pipe(output);
-        archive.directory(__dirname + '/' + req.username + '/songs', false);
-        // Delete the directory after a prudential time
-        setTimeout(() => {
-            //@ts-ignore
-            fs.rmdir(__dirname + '/' + req.username, { recursive: true }, () => { });
-        },  2 * 60 * 60 * 1000);
-        archive.finalize();
-    });
+    return nightmare.end();
 }
