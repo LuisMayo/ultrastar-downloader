@@ -1,4 +1,5 @@
 const fs = require('fs');
 const input = JSON.parse(fs.readFileSync(process.argv[2]));
 const ultrastar = require('./ultrastar');
-ultrastar.main(input).then(() => {});
+const { checkDownloaded } = require('./check-downloaded');
+ultrastar.main(input).then(() => {checkDownloaded(input);});
