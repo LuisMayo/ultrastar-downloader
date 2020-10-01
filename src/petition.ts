@@ -1,5 +1,10 @@
 export interface Petition {
-    songs: {title: string, artist: string, language: string}[],
+    songs: Song[],
     username: string;
     password: string;
+}
+
+export interface Song {
+    title: string;
+    artist: string;
 }
