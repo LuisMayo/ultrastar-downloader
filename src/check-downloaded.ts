@@ -35,7 +35,7 @@ export function checkDownloaded(req: Petition, internal = false) {
     const rejectedSongs = req.songs.filter(
         // To check if a song is downloaded or not we search it on the songs we obtained from reading the downloaded songs filename
         petitionSong => songs.find(
-            downloadedSong => compareTwoStrings(petitionSong.artist.toLocaleLowerCase(), downloadedSong.artist.toLocaleLowerCase()) > 0.85
+            downloadedSong => compareTwoStrings(petitionSong.artist.toLocaleLowerCase(), downloadedSong.artist.toLocaleLowerCase()) > 0.80
             && compareTwoStrings(petitionSong.title.toLocaleLowerCase(), downloadedSong.title.toLocaleLowerCase()) > 0.75
         ) == null // If we didn't found a match (i.e: find result is null) it means we don't have that song so we return true to the filter function so this gets included in the array
     );

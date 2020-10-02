@@ -95,12 +95,14 @@ export async function main(req: Petition) {
                 // Even while we have already replaced parenthesis we still perform this search to avoid unamtched simbols to prevail
                 song.title = song.title.replace(symbolsRe, '');
                 song.title = song.title.toLocaleLowerCase().trim();
+                song.title = song.title.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
                 song.artist = song.artist.replace(featRe, ' & ');
                 song.artist = song.artist.replace(ftRe, ' & ');
                 song.artist = song.artist.replace(parenthesisRe, '');
                 song.artist = song.artist.replace(symbolsRe, '');
                 song.artist = song.artist.toLocaleLowerCase().trim();
+                song.artist = song.artist.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
 
 
@@ -110,16 +112,22 @@ export async function main(req: Petition) {
             }
 
             //// END of copied functions
-            alert(sArtist);
-            alert(sTitle);
-            debugger;
             const artist = document.querySelector('#listado > ul > li:nth-child(1) > h3 > a')?.textContent || '';
             const title = document.querySelector('#listado > ul > li:nth-child(1) > h3 > a:nth-child(2)')?.textContent || '';
             const song = { artist, title };
             normalizeSong(song);
-            const similarityArt = compareTwoStrings(sArtist, song.artist);
+            let similarityArt = compareTwoStrings(sArtist, song.artist);
             const similaritySong = compareTwoStrings(song.title, sTitle);
-            if (similarityArt >= 0.85 && similaritySong >= 0.75) { // Is it actually the song we want?
+
+            // Apart from comparing the title and artist I also want to compare all the different artists since sometimes only one of them is listed
+            const requestedArtists = sArtist.split('&').map((artist: string) => artist.trim());
+            const foundArtists = artist.split('&').map((artist: string) => artist.trim());
+            for (const requestedArtist of requestedArtists) {
+                for (const foundArtist of foundArtists) {
+                    similarityArt = Math.max(similarityArt, compareTwoStrings(requestedArtist, foundArtist));
+                }
+            }
+            if (similarityArt >= 0.80 && similaritySong >= 0.75) { // Is it actually the song we want?
                 (document.querySelector('.canciones > li > .acciones > li > a') as HTMLElement).click(); // Download it
             }
         }, sArtist, sTitle);
