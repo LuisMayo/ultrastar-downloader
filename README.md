@@ -38,7 +38,7 @@ npm i;
 ```
 
 3. Compile the project using `npm run build`
-4. Launch the project with `node build YOUR-FILE.json`
+4. Launch the project with `node build/index.js YOUR-FILE.json`
 
 ## About headless enviorenments
 Due to the libraries needed used in this project, an X-server is required always.
