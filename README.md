@@ -15,7 +15,7 @@ export interface Song {
 }
 ```
 
-In case you don't know where to gather this songs list, there is a little webapp which will export your Spotify songs into said format. [Link](https://luismayo.github.io/spotify-ultrastar-downloader/)/[Source](https://github.com/LuisMayo/spotify-ultrastar-downloader)
+In case you don't know where to gather this songs list, there is a little webapp which will export your Spotify songs into said format. [Link](https://luismayo.github.io/spotify-ultrastar-downloader/exportify.html)/[Source](https://github.com/LuisMayo/spotify-ultrastar-downloader)
 
 ## Getting Started
 
